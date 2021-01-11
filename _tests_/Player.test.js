@@ -40,4 +40,43 @@ test('gets inventory from player or returns false', () => {
     expect(player.getHealth()).toEqual(expect.stringContaining(player.health.toString()));
   });
 
+  test('adds a potion to the inventory', () => {
+    const player = new Player('Dave');
+    const oldCount = player.inventory.length;
+  
+    player.addPotion(new Potion());
+  
+    expect(player.inventory.length).toBeGreaterThan(oldCount);
+  });
+
+  Player.prototype.addPotion = function(potion) {
+    this.inventory.push(potion);
+  };
+  test('uses a potion from inventory', () => {
+    const player = new Player('Dave');
+    player.inventory = [new Potion(), new Potion(), new Potion()];
+    const oldCount = player.inventory.length;
+  
+    player.usePotion(1);
+  
+    expect(player.inventory.length).toBeLessThan(oldCount);
+  });
+
+  Player.prototype.usePotion = function(index) {
+    const potion = this.getInventory().splice(index, 1)[0];
+  
+    switch (potion.name) {
+      case 'agility':
+        this.agility += potion.value;
+        break;
+      case 'health':
+        this.health += potion.value;
+        break;
+      case 'strength':
+        this.strength += potion.value;
+        break;
+    }
+  };
+  
+
   module.exports = Potion;
